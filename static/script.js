@@ -18,15 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ counter }),
-        }).then((res) => {
-            console.log(`subbmited: ${counter}`)
         })
-        // .then(response => response.json())
-        // .then(data => {
-        //     alert(`Server received counter value: ${data.counter}`);
-        // })
-        // .catch(error => {
-        //     console.error('Error:', error);
-        // });
+            .then(response => response.json())
+            .then(data => {
+                // alert(`Server received counter value: ${data.counter}`);
+                console.log(`submitter cat : ${data.counter}`)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
 });
