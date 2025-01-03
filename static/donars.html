@@ -55,6 +55,7 @@
             font-weight: 500;
             font-size: 0.875rem;
             transition: color 0.2s;
+
             &:hover {
                 color: #dc2626;
                 text-decoration: underline;
@@ -233,9 +234,9 @@
         </div>
         <nav class="nav">
             <ul class="nav-links">
-                <li><a href="home.html" class="active">HOME</a></li>
-                <li><a href="apply.html">DONATION REQUEST</a></li>
-                <li><a href="donars.html">Donor</a></li>
+                <li><a href="./home.html" class="active">HOME</a></li>
+                <li><a href="./apply.html">DONATION REQUEST</a></li>
+                <li><a href="./donars.html">Donor</a></li>
             </ul>
         </nav>
     </header>
@@ -285,7 +286,7 @@
         }
 
         // Fetch donors data
-        fetch('donors.json')
+        fetch('assets/donors.json')
             .then(response => response.json())
             .then(data => {
                 renderDonors(data.donors);
