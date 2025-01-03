@@ -2,55 +2,23 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 
-	"github.com/gin-gonic/gin"
+	merry "github.com/Mondal-Prasun/BloodBank/Merry"
 )
 
 func main() {
-	fmt.Println("Hello BloodBank")
+	fmt.Println("This is new test")
 
-	port := ":8080"
+	m := merry.Init("/v1", "")
 
-	route := gin.Default()
-
-	route.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"health": "health is okk",
+	m.Route("/hi", func(mr merry.MerryResponseWriter) {
+		mr.Res(200, struct {
+			Msg string `json:"msg"`
+		}{
+			Msg: "this is working",
 		})
 	})
 
-	route.Static("/static", "./static")
-	route.LoadHTMLGlob("templates/*")
-
-	route.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "Cool Cat",
-		})
-	})
-
-	route.POST("/submit", func(c *gin.Context) {
-		// Parse JSON payload
-		var json struct {
-			Counter int `json:"counter"`
-		}
-		if err := c.ShouldBindJSON(&json); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
-			return
-		}
-
-		fmt.Println("counter: ", json.Counter)
-
-		// Respond with the received counter value
-		c.JSON(http.StatusOK, gin.H{"counter": json.Counter})
-	})
-
-	fmt.Printf("Server is running on PORT:%s", port)
-
-	err := route.Run(port)
-
-	if err != nil {
-		panic("Serer is not running!!!")
-	}
+	merry.Ship("8080", m)
 
 }

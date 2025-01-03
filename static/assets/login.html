@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Denk+One&family=Marcellus&display=swap");
+        body {
+            font-family: "Marcellus", serif;
+            background-color: #f0f2f5;
+            height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            margin-top: 6rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            height: 5rem;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #A2D2DF;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        #blood {
+            font-size: xx-large;
+            color: #dc2626;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            text-transform: uppercase;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+
+            &:hover {
+                color: #dc2626;
+                text-decoration: underline;
+            }
+        }
+
+        .nav-links a:hover {
+            color: #dc2626;
+        }
+
+        .login-container {
+            background-color: #A2D2DF;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1877f2;
+            margin-bottom: 1.5rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        button {
+            background-color: #1877f2;
+            color: white;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: "Marcellus", serif;;
+        }
+
+        button:hover {
+            background-color: #507687;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="fa-sharp fa-solid fa-droplet" id="blood"></i>
+        </div>
+        <nav class="nav">
+            <ul class="nav-links">
+                <li><a href="./home.html" class="active">HOME</a></li>
+                <li><a href="./apply.html">DONATION REQUEST</a></li>
+                <li><a href="./donars.html">Donor</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="login-container">
+            <h2>Login</h2>
+            <form>
+                <div class="input-group">
+                    <input type="text" placeholder="Email-ID" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <span class="password-toggle" onclick="togglePassword()">🔓</span>
+                </div>
+                <button type="submit">Log In</button>
+            </form>
+        </div>
+    </main>
+    <script src="https://kit.fontawesome.com/667ffe05ac.js" crossorigin="anonymous"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordToggle = document.querySelector('.password-toggle');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.textContent = '🔒';
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.textContent = '🔓';
+            }
+        }
+    </script>
+</body>
+
+</html>
