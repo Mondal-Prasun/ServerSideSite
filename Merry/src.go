@@ -3,6 +3,7 @@ package merry
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -28,6 +29,8 @@ type MerryContext struct {
 	context       string
 	requestMethod string
 	fileDir       string
+	w             http.ResponseWriter
+	r             *http.Request
 }
 
 type routeDetails struct {
@@ -50,13 +53,22 @@ func Init(basePattern string, filepath *string) (merry *Merry) {
 
 // Route is for all the route defines after the BasePattern and defiend function
 func (m *Merry) Route(requestMethod string, pattern string, handler func(mr MerryContext)) {
-	test := MerryContext{
-		context:       pattern,
-		requestMethod: requestMethod,
-		fileDir:       m.filepath,
+
+	allRoutes[pattern] = routeDetails{
+		hanlder: func(w http.ResponseWriter, r *http.Request) {
+
+			currentContext := MerryContext{
+				context:       pattern,
+				requestMethod: requestMethod,
+				fileDir:       m.filepath,
+				w:             w,
+				r:             r,
+			}
+
+			handler(currentContext)
+		},
 	}
 
-	handler(test)
 }
 
 // Ship serves in http and all the static files
@@ -104,18 +116,24 @@ func (mr *MerryContext) ServeHtml(statusCode int, htmlFilePath string) {
 		return
 	}
 
-	allRoutes[mr.context] = routeDetails{
-		hanlder: func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "text/html")
-			w.WriteHeader(statusCode)
-			w.Write(htmlFile)
-		},
-	}
+	mr.w.Header().Set("Content-Type", "text/html")
+	mr.w.WriteHeader(statusCode)
+	mr.w.Write(htmlFile)
 
+}
+
+// /ReqBody Returns the request body
+func (mr *MerryContext) ReqBody() io.ReadCloser {
+	return mr.r.Body
 }
 
 // Res is for the server response
 func (mr *MerryContext) Res(statusCode int, data interface{}) {
+
+	if mr.w == nil || mr.r == nil {
+		log.Println("MerryContext is not properly initialized")
+		return
+	}
 
 	byteData, err := json.Marshal(data)
 
@@ -124,16 +142,10 @@ func (mr *MerryContext) Res(statusCode int, data interface{}) {
 		return
 	}
 
-	allRoutes[mr.context] = routeDetails{
-		hanlder: func(w http.ResponseWriter, r *http.Request) {
-			if mr.requestMethod == r.Method {
-
-				w.Header().Add("Content-type", "application/json")
-				w.WriteHeader(statusCode)
-				w.Write(byteData)
-			}
-
-		},
+	if mr.r.Method == mr.requestMethod {
+		mr.w.Header().Add("Content-type", "application/json")
+		mr.w.WriteHeader(statusCode)
+		mr.w.Write(byteData)
 	}
 
 }
@@ -143,12 +155,13 @@ func (mr *MerryContext) Err(statusCode int, msg string) {
 		panic("Status code for error cannot be lower than 300")
 	}
 
-	allRoutes[mr.context] = routeDetails{
-		hanlder: func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-type", "application/json")
-			w.WriteHeader(statusCode)
-			w.Write([]byte(msg))
-		},
+	if mr.w == nil || mr.r == nil {
+		log.Println("MerryContext is not properly initialized")
+		return
 	}
+
+	mr.w.Header().Add("Content-type", "application/json")
+	mr.w.WriteHeader(statusCode)
+	mr.w.Write([]byte(msg))
 
 }
